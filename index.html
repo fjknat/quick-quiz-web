@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offshore team - CDL - List Quiz</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Confetti JS -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* Retro Palette */
+        :root {
+            --bg-cream: #fdf6e3;
+            --text-dark: #002b36;
+            --accent-orange: #cb4b16;
+            --accent-yellow: #b58900;
+            --accent-teal: #2aa198;
+            --accent-red: #dc322f;
+            --paper-shadow: 8px 8px 0px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            font-family: 'Merriweather', serif;
+            background-image: radial-gradient(#d3cbb8 1px, transparent 1px);
+            background-size: 20px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .font-mono {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Retro Components */
+        .retro-card {
+            background: #fff;
+            border: 2px solid #002b36;
+            box-shadow: var(--paper-shadow);
+        }
+
+        .btn-retro {
+            background: var(--text-dark);
+            color: #fff;
+            border: 2px solid #002b36;
+            font-family: 'Fira Code', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: transform 0.1s;
+            box-shadow: 4px 4px 0px var(--accent-orange);
+            display: block;
+            text-align: center;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-retro:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 6px 6px 0px var(--accent-orange);
+            color: #fff;
+        }
+
+        .btn-retro:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--accent-orange);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Welcome Overlay */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 43, 54, 0.95), rgba(203, 75, 22, 0.8));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+
+        .welcome-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .welcome-content {
+            text-align: center;
+            color: #fff;
+            max-width: 600px;
+            padding: 2rem;
+        }
+
+        .welcome-icon {
+            font-size: 4rem;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: iconBounce 1s ease-out 0.5s forwards;
+        }
+
+        @keyframes iconBounce {
+            0% { opacity: 0; transform: scale(0.5) translateY(50px); }
+            50% { opacity: 1; transform: scale(1.2) translateY(-10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            opacity: 0;
+            animation: titleFade 1s ease-out 1.5s forwards;
+        }
+
+        @keyframes titleFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: subtitleFade 1s ease-out 2.5s forwards;
+            border-left: 4px solid var(--accent-teal);
+            padding-left: 1rem;
+        }
+
+        @keyframes subtitleFade {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .welcome-progress {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            margin: 2rem auto;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .welcome-progress-bar {
+            height: 100%;
+            background: var(--accent-teal);
+            width: 0%;
+            animation: progressFill 4s ease-out forwards;
+        }
+
+        @keyframes progressFill {
+            to { width: 100%; }
+        }
+
+        /* Typewriter effect */
+        .typewriter {
+            overflow: hidden;
+            border-right: 2px solid var(--accent-orange);
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: 0.15em;
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: var(--accent-orange); }
+        }
+
+        /* Click Animation */
+        .btn-retro.clicked {
+            animation: clickEffect 0.3s ease-out;
+        }
+
+        @keyframes clickEffect {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-retro.loading {
+            position: relative;
+            pointer-events: none;
+        }
+
+        .btn-retro.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #fff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Welcome Overlay -->
+    <div id="welcome-overlay" class="welcome-overlay">
+        <div class="welcome-content">
+            <div class="welcome-icon">🚀🎉</div>
+            <h1 class="welcome-title">Welcome to CDL Quiz Platform</h1>
+            <p class="welcome-subtitle">Empowering Offshore Teams with Knowledge</p>
+            <div class="welcome-progress">
+                <div class="welcome-progress-bar"></div>
+            </div>
+            <p class="typewriter">Loading amazing quizzes for you...</p>
+        </div>
+    </div>
+
+    <div class="flex-grow flex items-center justify-center p-4">
+        <div class="retro-card p-8 max-w-md w-full text-center animate-fade-in">
+            <div class="mb-4 text-4xl">🚀</div>
+            <h1 class="text-2xl font-bold mb-6 text-[#cb4b16]">Offshore team - CDL - List Quiz</h1>
+
+            <div class="mb-8 space-y-4">
+                <a href="/quiz/golang-basic" class="btn-retro quiz-link">
+                    <i class="fas fa-code mr-2"></i> Golang Basic
+                </a>
+                <a href="/quiz/agentcore-basic" class="btn-retro quiz-link">
+                    <i class="fas fa-robot mr-2"></i> AgentCore Basic
+                </a>
+                <a href="/quiz/mcp-basic" class="btn-retro quiz-link">
+                    <i class="fas fa-network-wired mr-2"></i> MCP Basic
+                </a>
+            </div>
+
+            <footer class="mt-8 pt-4 border-t-2 border-dashed border-gray-200">
+                <p class="text-sm font-mono text-gray-500 font-bold">Thai Phung @ 2026</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Welcome Effect with Multiple Steps
+        window.addEventListener('load', () => {
+            const overlay = document.getElementById('welcome-overlay');
+            
+            // Step 1: Icon animation (already in CSS)
+            // Step 2: Title fade in (already in CSS)
+            // Step 3: Subtitle slide in (already in CSS)
+            // Step 4: Progress bar and typewriter (already in CSS)
+            
+            // Step 5: Confetti after 3 seconds
+            setTimeout(() => {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }, 3000);
+            
+            // Step 6: Fade out after 5 seconds
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+            }, 5000);
+        });
+
+        // Click Effect for Quiz Links
+        document.querySelectorAll('.quiz-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent immediate navigation
+                
+                const href = this.getAttribute('href');
+                this.classList.add('clicked');
+                
+                // Add loading effect
+                this.classList.add('loading');
+                
+                // Small confetti on click
+                confetti({
+                    particleCount: 30,
+                    spread: 60,
+                    origin: { x: 0.5, y: 0.8 }
+                });
+                
+                // Navigate after animation
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 800); // Wait for animation
+            });
+        });
+    </script>
+
+</body>
+
+</html>

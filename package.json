@@ -1,0 +1,13 @@
+{
+  "name": "quiz-web-server",
+  "version": "1.0.0",
+  "description": "Simple Node.js web server for serving quiz HTML files",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "localtunnel": "^2.0.2"
+  }
+}
